@@ -21,7 +21,8 @@ using Autodesk.Revit.DB.Structure;
 
 namespace RebarVisibility
 {
-    class CommandSetAllRebarAsBody : IExternalCommand
+    [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
+    class Command : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -41,19 +42,19 @@ namespace RebarVisibility
             List<Rebar> rebars = new FilteredElementCollector(doc, view.Id)
                 .WhereElementIsNotElementType()
                 .OfClass(typeof(Rebar))
-                .Where(r => IsEditable(r, username))
                 .Cast<Rebar>()
                 .ToList();
 
             List<RebarInSystem> rebars2 = new FilteredElementCollector(doc, view.Id)
                 .WhereElementIsNotElementType()
                 .OfClass(typeof(RebarInSystem))
-                .Where(r => IsEditable(r, username))
                 .Cast<RebarInSystem>()
                 .ToList();
 
             List<MyBar> myrebars = rebars.Select(i => new MyBar(i)).ToList();
             myrebars.AddRange(rebars2.Select(i => new MyBar(i)));
+
+            int rebarNotEditableCount = 0;
 
             using (Transaction t = new Transaction(doc))
             {
@@ -71,6 +72,12 @@ namespace RebarVisibility
 
                     foreach (MyBar bar in myrebars)
                     {
+                        if (!IsEditable(bar.RevitBar, username))
+                        {
+                            rebarNotEditableCount++;
+                            continue;
+                        }
+
                         try
                         {
                             bar.SetSolidInView(view3d, form.rebarAsbodyOn);
@@ -101,6 +108,11 @@ namespace RebarVisibility
                 {
                     foreach (MyBar bar in myrebars)
                     {
+                        if (!IsEditable(bar.RevitBar, username))
+                        {
+                            rebarNotEditableCount++;
+                            continue;
+                        }
                         try
                         {
                             bar.SetUnobscuredInView(view, form.rebarIsUnobsqured);
@@ -117,6 +129,13 @@ namespace RebarVisibility
                 }
 
                 t.Commit();
+            }
+
+            if(rebarNotEditableCount > 0)
+            {
+                string msg = "Некоторые улументы заняты другими проектировщиками. ";
+                msg += "Не удалось обработать " + rebarNotEditableCount.ToString() + " стержней.";
+                TaskDialog.Show("Сообщение", msg);
             }
 
             return Result.Succeeded;
