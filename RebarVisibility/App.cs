@@ -10,16 +10,13 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
 using System.IO;
-
+#endregion
 
 namespace RebarVisibility
 {
@@ -36,7 +33,7 @@ namespace RebarVisibility
             assemblyPath = typeof(App).Assembly.Location;
             iconsPath = Path.GetDirectoryName(assemblyPath);
 
-            string tabName = "Weandrevit";
+            string tabName = "BIM-STARTER TEST";
             try { application.CreateRibbonTab(tabName); }
             catch { }
 
