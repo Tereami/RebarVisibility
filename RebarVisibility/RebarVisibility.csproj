@@ -33,14 +33,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RbsLogger">
-      <HintPath>..\..\..\RbsLogger\RbsLogger\bin\Debug\RbsLogger.dll</HintPath>
+      <HintPath>..\..\RbsLogger\RbsLogger\bin\Debug\RbsLogger.dll</HintPath>
     </Reference>
-    <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
+    <Reference Include="RevitAPI, Version=23.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
+    <Reference Include="RevitAPIUI, Version=23.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -64,7 +66,33 @@
       <DependentUpon>FormDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="MyBar.cs" />
+    <Compile Include="MyStrings.ru-RU.Designer.cs">
+      <DependentUpon>MyStrings.ru-RU.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="MyStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MyStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormDialog.resx">
+      <DependentUpon>FormDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDialog.ru-RU.resx">
+      <DependentUpon>FormDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyStrings.ru-RU.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MyStrings.ru-RU.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MyStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

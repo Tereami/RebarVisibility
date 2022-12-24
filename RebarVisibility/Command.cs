@@ -77,7 +77,7 @@ namespace RebarVisibility
 
             using (Transaction t = new Transaction(doc))
             {
-                t.Start("Видимость арматуры");
+                t.Start(MyStrings.TransactionRebarVIsibility);
 
                 if (form.rebarAsBodyActivate)
                 {
@@ -86,7 +86,7 @@ namespace RebarVisibility
                     if (view == null)
                     {
                         Debug.WriteLine("View is not View3D");
-                        TaskDialog.Show("Ошибка", "Перейдите на 3D-вид");
+                        TaskDialog.Show(MyStrings.Error, MyStrings.ErrorOpen3dView);
                         return Result.Failed;
                     }
 
@@ -105,11 +105,11 @@ namespace RebarVisibility
                             bar.SetSolidInView(view3d, form.rebarAsbodyOn);
                             Debug.WriteLine("Set solid success");
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
-                            string msg = "Unable to set RebasAsBody. Rebar id: ";
-                            msg += bar.RevitBar.Id.IntegerValue.ToString() + ", view name: " + view.Name;
-                            msg += ". Exception message: " + ex.Message;
+                            string msg = MyStrings.ErrorUnableSetBody
+                                + bar.RevitBar.Id.IntegerValue.ToString() + MyStrings.ErrorViewName + view.Name
+                                + MyStrings.ErrorExceprionMessage + ex.Message;
                             message = msg;
                             Debug.WriteLine(msg);
                             return Result.Failed;
@@ -125,7 +125,7 @@ namespace RebarVisibility
                         catch
                         {
                             Debug.WriteLine("Unable to set fine detail level");
-                            TaskDialog.Show("Внимание!", "Не удалось назначить Высокий уровень детализации для вида. Сделайте это вручную.");
+                            TaskDialog.Show(MyStrings.Warning, MyStrings.ErrorUnableToSetFineDetailLevel);
                         }
                     }
                 }
@@ -147,11 +147,11 @@ namespace RebarVisibility
                             bar.SetUnobscuredInView(view, form.rebarIsUnobsqured);
                             Debug.WriteLine("Set Unobscured success");
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
-                            string msg = "Unable to set RebasIsUnobsqured. Rebar id: ";
-                            msg += bar.RevitBar.Id.IntegerValue.ToString() + ", view name: " + view.Name;
-                            msg += ". Exception message: " + ex.Message;
+                            string msg = MyStrings.ErrorUnableSetUnobscured
+                                + bar.RevitBar.Id.IntegerValue.ToString() + MyStrings.ErrorViewName + view.Name
+                                + MyStrings.ErrorExceprionMessage + ex.Message;
                             message = msg;
                             Debug.WriteLine(msg);
                             return Result.Failed;
@@ -162,11 +162,10 @@ namespace RebarVisibility
                 t.Commit();
             }
             Debug.WriteLine("Error bars count: " + rebarNotEditableCount);
-            if(rebarNotEditableCount > 0)
+            if (rebarNotEditableCount > 0)
             {
-                string msg = "Некоторые улументы заняты другими проектировщиками. ";
-                msg += "Не удалось обработать " + rebarNotEditableCount.ToString() + " стержней.";
-                TaskDialog.Show("Сообщение", msg);
+                string msg = MyStrings.ErrorRebarsAreEditable + rebarNotEditableCount.ToString();
+                TaskDialog.Show(MyStrings.Warning, msg);
             }
             Debug.WriteLine("Success");
             return Result.Succeeded;
