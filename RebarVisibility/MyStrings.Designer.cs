@@ -133,6 +133,15 @@ namespace RebarVisibility {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In Revit 2023 you can use Fine detalization level to set rebar as  solid.
+        /// </summary>
+        public static string RebarBodyRevit2023 {
+            get {
+                return ResourceManager.GetString("RebarBodyRevit2023", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rebar visibility.
         /// </summary>
         public static string TransactionRebarVIsibility {

@@ -141,6 +141,9 @@
   <data name="ErrorViewName" xml:space="preserve">
     <value>, имя вида:</value>
   </data>
+  <data name="RebarBodyRevit2023" xml:space="preserve">
+    <value>В Revit 2023 вы можете использовать Высокий уровень детализации, чтобы отобразить арматуру в объеме</value>
+  </data>
   <data name="TransactionRebarVIsibility" xml:space="preserve">
     <value>Видимость арматуры</value>
   </data>

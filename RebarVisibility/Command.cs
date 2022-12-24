@@ -44,6 +44,16 @@ namespace RebarVisibility
                 return Result.Cancelled;
             }
 
+            if(form.rebarAsBodyActivate)
+            {
+                Autodesk.Revit.ApplicationServices.Application app =
+                    commandData.Application.Application;
+                int version = int.Parse(app.VersionNumber);
+                if(version >= 2023)
+                {
+                    TaskDialog.Show(MyStrings.Warning, MyStrings.RebarBodyRevit2023);
+                }
+            }
 
             Document doc = commandData.Application.ActiveUIDocument.Document;
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;

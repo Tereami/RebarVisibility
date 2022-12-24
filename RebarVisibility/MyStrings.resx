@@ -141,6 +141,9 @@
   <data name="ErrorViewName" xml:space="preserve">
     <value>, view name:</value>
   </data>
+  <data name="RebarBodyRevit2023" xml:space="preserve">
+    <value>In Revit 2023 you can use Fine detalization level to set rebar as  solid</value>
+  </data>
   <data name="TransactionRebarVIsibility" xml:space="preserve">
     <value>Rebar visibility</value>
   </data>
