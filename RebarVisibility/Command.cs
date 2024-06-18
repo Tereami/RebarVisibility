@@ -27,20 +27,20 @@ namespace RebarVisibility
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Debug.Listeners.Clear();
-            Debug.Listeners.Add(new RbsLogger.Logger("RebarVisibility"));
-            Debug.WriteLine("Start");
+            Trace.Listeners.Clear();
+            Trace.Listeners.Add(new RbsLogger.Logger("RebarVisibility"));
+            Trace.WriteLine("Start");
 
             FormDialog form = new FormDialog();
             form.ShowDialog();
             if (form.DialogResult != System.Windows.Forms.DialogResult.OK)
             {
-                Debug.WriteLine("Cancelled");
+                Trace.WriteLine("Cancelled");
                 return Result.Cancelled;
             }
             if (!form.rebarAsBodyActivate && !form.rebarOverlayActivate)
             {
-                Debug.WriteLine("No selected checkboxes");
+                Trace.WriteLine("No selected checkboxes");
                 return Result.Cancelled;
             }
 
@@ -63,7 +63,7 @@ namespace RebarVisibility
             View view = uiDoc.ActiveView;
             if (view == null)
             {
-                Debug.WriteLine("No active view");
+                Trace.WriteLine("No active view");
                 throw new Exception("Unable to get ActiveVIew");
             }
             List<Rebar> rebars = new FilteredElementCollector(doc, view.Id)
@@ -71,14 +71,14 @@ namespace RebarVisibility
                 .OfClass(typeof(Rebar))
                 .Cast<Rebar>()
                 .ToList();
-            Debug.WriteLine("Rebars found: " + rebars.Count);
+            Trace.WriteLine("Rebars found: " + rebars.Count);
 
             List<RebarInSystem> rebars2 = new FilteredElementCollector(doc, view.Id)
                 .WhereElementIsNotElementType()
                 .OfClass(typeof(RebarInSystem))
                 .Cast<RebarInSystem>()
                 .ToList();
-            Debug.WriteLine("RebarsInSystem found: " + rebars2.Count);
+            Trace.WriteLine("RebarsInSystem found: " + rebars2.Count);
 
             List<MyBar> myrebars = rebars.Select(i => new MyBar(i)).ToList();
             myrebars.AddRange(rebars2.Select(i => new MyBar(i)));
@@ -91,21 +91,21 @@ namespace RebarVisibility
 
                 if (form.rebarAsBodyActivate)
                 {
-                    Debug.WriteLine("Start rebar as body");
+                    Trace.WriteLine("Start rebar as body");
                     View3D view3d = view as View3D;
                     if (view == null)
                     {
-                        Debug.WriteLine("View is not View3D");
+                        Trace.WriteLine("View is not View3D");
                         TaskDialog.Show(MyStrings.Error, MyStrings.ErrorOpen3dView);
                         return Result.Failed;
                     }
 
                     foreach (MyBar bar in myrebars)
                     {
-                        Debug.WriteLine("Current rebar id: " + bar.RevitBar.Id.IntegerValue);
+                        Trace.WriteLine("Current rebar id: " + bar.RevitBar.Id.GetElementId());
                         if (!IsEditable(bar.RevitBar, username))
                         {
-                            Debug.WriteLine("Rebar is not editable");
+                            Trace.WriteLine("Rebar is not editable");
                             rebarNotEditableCount++;
                             continue;
                         }
@@ -113,15 +113,15 @@ namespace RebarVisibility
                         try
                         {
                             bar.SetSolidInView(view3d, form.rebarAsbodyOn);
-                            Debug.WriteLine("Set solid success");
+                            Trace.WriteLine("Set solid success");
                         }
                         catch (Exception ex)
                         {
                             string msg = MyStrings.ErrorUnableSetBody
-                                + bar.RevitBar.Id.IntegerValue.ToString() + MyStrings.ErrorViewName + view.Name
+                                + bar.RevitBar.Id.GetElementId().ToString() + MyStrings.ErrorViewName + view.Name
                                 + MyStrings.ErrorExceprionMessage + ex.Message;
                             message = msg;
-                            Debug.WriteLine(msg);
+                            Trace.WriteLine(msg);
                             return Result.Failed;
                         }
                     }
@@ -130,11 +130,11 @@ namespace RebarVisibility
                         try
                         {
                             view.DetailLevel = ViewDetailLevel.Fine;
-                            Debug.WriteLine("Detail level set to fine");
+                            Trace.WriteLine("Detail level set to fine");
                         }
                         catch
                         {
-                            Debug.WriteLine("Unable to set fine detail level");
+                            Trace.WriteLine("Unable to set fine detail level");
                             TaskDialog.Show(MyStrings.Warning, MyStrings.ErrorUnableToSetFineDetailLevel);
                         }
                     }
@@ -142,28 +142,28 @@ namespace RebarVisibility
 
                 if (form.rebarOverlayActivate)
                 {
-                    Debug.WriteLine("Start rebar Unobscured");
+                    Trace.WriteLine("Start rebar Unobscured");
                     foreach (MyBar bar in myrebars)
                     {
-                        Debug.WriteLine("Current rebar id:" + bar.RevitBar.Id.IntegerValue);
+                        Trace.WriteLine("Current rebar id:" + bar.RevitBar.Id.GetElementId());
                         if (!IsEditable(bar.RevitBar, username))
                         {
                             rebarNotEditableCount++;
-                            Debug.WriteLine("Rebar is not editable");
+                            Trace.WriteLine("Rebar is not editable");
                             continue;
                         }
                         try
                         {
                             bar.SetUnobscuredInView(view, form.rebarIsUnobsqured);
-                            Debug.WriteLine("Set Unobscured success");
+                            Trace.WriteLine("Set Unobscured success");
                         }
                         catch (Exception ex)
                         {
                             string msg = MyStrings.ErrorUnableSetUnobscured
-                                + bar.RevitBar.Id.IntegerValue.ToString() + MyStrings.ErrorViewName + view.Name
+                                + bar.RevitBar.Id.GetElementId().ToString() + MyStrings.ErrorViewName + view.Name
                                 + MyStrings.ErrorExceprionMessage + ex.Message;
                             message = msg;
-                            Debug.WriteLine(msg);
+                            Trace.WriteLine(msg);
                             return Result.Failed;
                         }
                     }
@@ -171,13 +171,13 @@ namespace RebarVisibility
 
                 t.Commit();
             }
-            Debug.WriteLine("Error bars count: " + rebarNotEditableCount);
+            Trace.WriteLine("Error bars count: " + rebarNotEditableCount);
             if (rebarNotEditableCount > 0)
             {
                 string msg = MyStrings.ErrorRebarsAreEditable + rebarNotEditableCount.ToString();
                 TaskDialog.Show(MyStrings.Warning, msg);
             }
-            Debug.WriteLine("Success");
+            Trace.WriteLine("Success");
             return Result.Succeeded;
         }
 

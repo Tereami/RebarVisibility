@@ -26,6 +26,7 @@ namespace RebarVisibility
 
         public void SetSolidInView(View3D v, bool AsBody)
         {
+#if R2017 || R2018 || R2019 || R2020 || R2021 || R2022
             if (RevitBar is Rebar)
             {
                 Rebar bar = RevitBar as Rebar;
@@ -36,6 +37,7 @@ namespace RebarVisibility
                 RebarInSystem bar = RevitBar as RebarInSystem;
                 bar.SetSolidInView(v, AsBody);
             }
+#endif
         }
 
         public void SetUnobscuredInView(View v, bool IsUnobsqured)
